@@ -11,7 +11,7 @@
         <link rel="apple-touch-icon" href="icon.png">
         <!-- Place favicon.ico in the root directory -->
         <link rel="stylesheet" href="css/normalize.css">
-        <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
+        <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
 
         <link rel="stylesheet" href="node_modules/slick-carousel/slick/slick.css">
         <link rel="stylesheet" href="css/main.css">
@@ -24,11 +24,12 @@
         <div class="row">
           <div class="col-12">
             <p>It might be said:</p>
-            <form action="" id="quizForm" novalidate="">
+            <form action="" id="quizForm" novalidate>
               <div id="quiz">
               <div class="form-group question_age">
                 <label for="age">Age</label>
                 <input type="text" id="age" required>
+                <div class="invalid-feedback">Enter a number</div>
               </div>
               <!-- It might be said: -->
                 <div class="form-group question_gender">
