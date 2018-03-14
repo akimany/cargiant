@@ -45,7 +45,7 @@ let quiz = (function() {
   // bind events
 
   //$(quizCont).on('click', '.slick-next', { $ageVal: $age.val() }, validateNum)
-  $age.on('keyup', validate)
+  $age.on('keyup', validateNum)
 
   // save
   function save() {}
@@ -82,11 +82,14 @@ let quiz = (function() {
   })
 
   // it might be said:
-  function validateNum(isNum) {
-    if (!/^[0-9]+$/.test(isNum) || $(quizForm).checkValidity() === false) {
-      //      event.preventDefault()
-      //      event.stopPropagation()
+  function validateNum() {
+    var num = $age.val()
+    console.log($(quizForm)[0].checkValidity())
+    if (!/^[0-9]+$/.test(num) || $(quizForm)[0].checkValidity() === false) {
+      // event.preventDefault()
+      // event.stopPropagation()
     }
+
     $(quizForm).addClass('was-validated')
   }
 
@@ -126,7 +129,6 @@ let quiz = (function() {
 
   return {
     save: save,
-    slide: slide,
     validateNum: validateNum,
     validateAge: validateAge,
     validateLicense: validateLicense,
@@ -145,7 +147,6 @@ $(function() {
       '<button type="button" class="slick-prev btn btn-primary">Previous</button>'
   })
 
-  quiz.validateNum($age.val())
   $(quizCont).on('click', '.slick-next', quiz.validateAge)
 })
 
