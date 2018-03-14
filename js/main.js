@@ -40,23 +40,46 @@ let quiz = (function() {
   // and an object to hold this session's data
   var userObj = {}
   const quizForm = document.getElementById('quizForm')
+  const submitBtn = document.getElementById('submit')
 
   // bind events
 
-  $(quizCont).on('click', '.slick-next', { $ageVal: $age.val() }, validateNum)
+  //$(quizCont).on('click', '.slick-next', { $ageVal: $age.val() }, validateNum)
   $age.on('keyup', validate)
 
   // save
   function save() {}
   // Validate
-  // change slider
-  function pushDataToObject(dataProp, data) {
-    userObj[dataProp] = data
-  }
-
-  function slide() {
-    // attach click handlers
-  }
+  // check which slide it is currently on and then dependng, on click push the value of the input into the object with that name
+  $(quizCont).on('beforeChange', function(
+    event,
+    slick,
+    currentSlide,
+    nextSlide
+  ) {
+    let slickIndex = $(slick.$slides.get(currentSlide)).data('slick-index')
+    if (slickIndex === 0) {
+      //validateNum()
+      //validateAge()
+      //save()
+      //loadPage()
+      validateAge()
+      validateNum()
+      save()
+    } else if (slickIndex === 1) {
+      //save()
+      console.log(1)
+    } else if (slickIndex === 2) {
+      // validateLicense
+      // save()
+      //loadPage()
+      console.log(2)
+    } else if (slickIndex === 3) {
+      // validateFirst()
+      // save()
+      console.log(3)
+    }
+  })
 
   // it might be said:
   function validateNum(isNum) {
@@ -64,14 +87,13 @@ let quiz = (function() {
       //      event.preventDefault()
       //      event.stopPropagation()
     }
-    console.log(isNum.data.$ageVal)
-    console.log($age.val())
     $(quizForm).addClass('was-validated')
   }
 
   // it might be said:
   function validateAge(age) {
     if (age < 18 || age > 80) {
+      console.log(age)
       save()
       // load end page
     }
@@ -79,13 +101,10 @@ let quiz = (function() {
 
   function validateLicense(validate) {
     if (validate === 'no') {
-      save()
-      // load end page
     }
   }
 
   function validateFirst(validate) {
-    save()
     if (validate === 'yes') {
       // load thank for interest
     } else {
@@ -104,9 +123,9 @@ let quiz = (function() {
   function loadPage(pageType) {
     //pageType would either be end page or offer page
   }
+
   return {
     save: save,
-    pushDataToObject: pushDataToObject,
     slide: slide,
     validateNum: validateNum,
     validateAge: validateAge,
@@ -117,9 +136,6 @@ let quiz = (function() {
   }
 })()
 
-const resultsCont = document.getElementById('results')
-const submitBtn = document.getElementById('submit')
-
 // it might be said
 $(function() {
   $(quizCont).slick({
@@ -128,6 +144,9 @@ $(function() {
     prevArrow:
       '<button type="button" class="slick-prev btn btn-primary">Previous</button>'
   })
+
+  quiz.validateNum($age.val())
+  $(quizCont).on('click', '.slick-next', quiz.validateAge)
 })
 
 // Frontend interface
