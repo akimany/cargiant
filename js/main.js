@@ -1,11 +1,5 @@
 // it might be said:
 
-// it might be said:
-const quizCont = document.getElementById('quiz')
-const quizForm = document.getElementById('quizForm')
-const resultsCont = document.getElementById('results')
-const submitBtn = document.getElementById('submit')
-
 let mainArr = [
   {
     question: 'Age',
@@ -35,72 +29,106 @@ let mainArr = [
   }
 ]
 
-let quiz = function() {
-  // pagination
-  const previousButton = document.getElementById('previous')
-  const nextButton = document.getElementById('next')
-  const slides = document.querySelectorAll('.slide')
-  let currentSlide = 0
-  return {
-    populate: function() {
-      const holdHTML = []
-      mainArr.forEach((element, index) => {
-        if (!element.flag) {
-          let questionHTML = `
-                      <div class="slide>
-                        <div class="form-group">
-                          <label for="${element.for}">${element.question}</label>
-                          <input type="text" id="${element.for}">
-                        </div>
-                      </div>`
-          holdHTML.push(questionHTML)
-        } else {
-          // it might be said:
-          let questionHTML = `
-                      <div class="slide>
-                        <div class="form-group">
-                          <label for="${element.for}">${element.question}</label>
-                          <select>
-                          <option value="male">Male</option>
-                          <option value="female">Female</option>
-                          <option value="other">Other</option>
-                          </select>
-                        </div>
-                      </div>`
-          holdHTML.push(questionHTML)
-        }
-      })
+//DOM elements
+const $age = $('#age')
+const quizCont = document.getElementById('quiz')
 
-      quizForm.innerHTML = holdHTML.join('')
-    },
-    showSlide: function(n) {
-      slides[currentSlide].classList.remove('active-slide')
-      slides[n].classList.add('active-slide')
-      currentSlide = n
-      if (currentSlide === 0) {
-        previousButton.style.display = 'none'
-      } else {
-        previousButton.style.display = 'inline-block'
-      }
-      if (currentSlide === slides.length - 1) {
-        nextButton.style.display = 'none'
-        submitBtn.style.display = 'inline-block'
-      } else {
-        nextButton.style.display = 'inline-block'
-        submitBtn.style.display = 'none'
-      }
-    },
-    results: function() {}
+// it might be said
+let quiz = (function() {
+  // this is the object that will be sent to localstorage / check if it can be an array
+  var dataObj = {}
+  // and an object to hold this session's data
+  var userObj = {}
+  const quizForm = document.getElementById('quizForm')
+
+  // bind events
+
+  $(quizCont).on('click', '.slick-next', { $ageVal: $age.val() }, validateNum)
+  $age.on('keyup', validate)
+
+  // save
+  function save() {}
+  // Validate
+  // change slider
+  function pushDataToObject(dataProp, data) {
+    userObj[dataProp] = data
   }
-}
-//
-$(function() {
-  let questionnaire = quiz()
-  questionnaire.populate()
 
-  questionnaire.showSlide(0)
+  function slide() {
+    // attach click handlers
+  }
+
+  // it might be said:
+  function validateNum(isNum) {
+    if (!/^[0-9]+$/.test(isNum) || $(quizForm).checkValidity() === false) {
+      //      event.preventDefault()
+      //      event.stopPropagation()
+    }
+    console.log(isNum.data.$ageVal)
+    console.log($age.val())
+    $(quizForm).addClass('was-validated')
+  }
+
+  // it might be said:
+  function validateAge(age) {
+    if (age < 18 || age > 80) {
+      save()
+      // load end page
+    }
+  }
+
+  function validateLicense(validate) {
+    if (validate === 'no') {
+      save()
+      // load end page
+    }
+  }
+
+  function validateFirst(validate) {
+    save()
+    if (validate === 'yes') {
+      // load thank for interest
+    } else {
+      // load offer message
+    }
+  }
+
+  function validate() {
+    var isValidated = ''
+    if (isValidated) {
+      slider()
+      save()
+    }
+  }
+
+  function loadPage(pageType) {
+    //pageType would either be end page or offer page
+  }
+  return {
+    save: save,
+    pushDataToObject: pushDataToObject,
+    slide: slide,
+    validateNum: validateNum,
+    validateAge: validateAge,
+    validateLicense: validateLicense,
+    validateFirst: validateFirst,
+    validate: validate,
+    loadPage: loadPage
+  }
+})()
+
+const resultsCont = document.getElementById('results')
+const submitBtn = document.getElementById('submit')
+
+// it might be said
+$(function() {
+  $(quizCont).slick({
+    nextArrow:
+      '<button type="button" class="slick-next btn btn-primary">Next</button>',
+    prevArrow:
+      '<button type="button" class="slick-prev btn btn-primary">Previous</button>'
+  })
 })
-// submitBtn.on('click', quiz.results())
 
 // Frontend interface
 // function to end survey and bring up last page
