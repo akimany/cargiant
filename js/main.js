@@ -1,153 +1,160 @@
-// it might be said:
-
-let mainArr = [
-  {
-    question: 'Age',
-    response: '',
-    html: '',
-    for: 'age'
-  },
-  {
-    question: 'Gender',
-    response: '',
-    html: '',
-    for: 'gender',
-    flag: 'select',
-    questionOptions: ['male', 'female', 'other']
-  },
-  {
-    question: 'Do you have a driving license?',
-    response: '',
-    html: '',
-    for: 'license'
-  },
-  {
-    question: 'Is this your first car?',
-    response: '',
-    html: '',
-    for: 'first'
-  }
-]
-
-//DOM elements
-const $age = $('#age')
-const quizCont = document.getElementById('quiz')
-
 // it might be said
 let quiz = (function() {
-  // this is the object that will be sent to localstorage / check if it can be an array
-  var dataObj = {}
-  // and an object to hold this session's data
-  var userObj = {}
+  //DOM elements
+  const $age = $('#age')
+  const quizCont = document.getElementById('quiz')
   const quizForm = document.getElementById('quizForm')
   const submitBtn = document.getElementById('submit')
+  const $next = $('#next')
+  const $mf = $('#mf')
+  const $driving = $('#driving')
+  const $first = $('#q_car')
+  const $results = $('#results')
+
+  let userObj = {}
 
   // bind events
 
-  //$(quizCont).on('click', '.slick-next', { $ageVal: $age.val() }, validateNum)
-  $age.on('keyup', validateNum)
+  $age.on('focusout', validateAge)
+  $age.on('focusout', validateNum)
+  $age.on('focusout', save)
 
-  // save
-  function save() {}
-  // Validate
-  // check which slide it is currently on and then dependng, on click push the value of the input into the object with that name
-  $(quizCont).on('beforeChange', function(
-    event,
-    slick,
-    currentSlide,
-    nextSlide
-  ) {
-    let slickIndex = $(slick.$slides.get(currentSlide)).data('slick-index')
-    if (slickIndex === 0) {
-      //validateNum()
-      //validateAge()
-      //save()
-      //loadPage()
-      validateAge()
-      validateNum()
-      save()
-    } else if (slickIndex === 1) {
-      //save()
-      console.log(1)
-    } else if (slickIndex === 2) {
-      // validateLicense
-      // save()
-      //loadPage()
-      console.log(2)
-    } else if (slickIndex === 3) {
-      // validateFirst()
-      // save()
-      console.log(3)
+  // it might be said:
+
+  $('#quiz').on('change', '#mf', save)
+  $('#quiz').on('change', '#mf', validateMf)
+
+  $('#quiz').on('change', '#driving', save)
+  $('#quiz').on('change', '#driving', validateDriving)
+
+  $('#quiz').on('change', '#first', save)
+  $('#quiz').on('change', '#first', validateFirst)
+
+  function save() {
+    let db = $(this).data('db')
+    let value = $(this).val()
+    if (!userObj[db]) {
+      userObj[db] = Number(value) ? Number(value) : value
     }
-  })
+    console.log(userObj)
+    return userObj
+  }
+  // it might be said:
+  function saveToLocalStorage(obj) {
+    let oldLocalstorage = JSON.parse(localStorage.getItem('cargiant')) || []
+    oldLocalstorage.push(obj)
+    localStorage.setItem('cargiant', JSON.stringify(oldLocalstorage))
+  }
 
   // it might be said:
   function validateNum() {
     var num = $age.val()
-    console.log($(quizForm)[0].checkValidity())
-    if (!/^[0-9]+$/.test(num) || $(quizForm)[0].checkValidity() === false) {
-      // event.preventDefault()
-      // event.stopPropagation()
+    if (!/^[0-9]+$/.test(num)) {
+      return false
+    } else {
+      return true
     }
-
     $(quizForm).addClass('was-validated')
   }
 
   // it might be said:
   function validateAge(age) {
-    if (age < 18 || age > 80) {
-      console.log(age)
-      save()
-      // load end page
+    var $age = $('#age').val()
+
+    if (validateNum()) {
+      $(quizCont).load('../partials/partial.html #q_gender')
+    } else if (!validateNum()) {
+      $('.q_age').addClass('has-danger')
+    }
+
+    if ($age < 18 || $age > 80) {
+      $(quizCont).load('../partials/partial.html #endPage')
     }
   }
 
-  function validateLicense(validate) {
-    if (validate === 'no') {
-    }
+  function validateMf() {
+    $(quizCont).load('../partials/partial.html #q_driving')
   }
 
-  function validateFirst(validate) {
-    if (validate === 'yes') {
-      // load thank for interest
+  function validateDriving() {
+    if ($(this).val() === 'driving_no') {
+      $(quizCont).load('../partials/partial.html #tyPage')
     } else {
-      // load offer message
+      $(quizCont).load('../partials/partial.html #q_car')
     }
   }
 
-  function validate() {
-    var isValidated = ''
-    if (isValidated) {
-      slider()
-      save()
+  function validateFirst() {
+    if ($(this).val() === 'first_yes') {
+      $(quizCont).load('../partials/partial.html #tyPage')
+    } else {
+      $(quizCont).load('../partials/partial.html #offerPage')
     }
   }
 
+  //it might be said:
   function loadPage(pageType) {
-    //pageType would either be end page or offer page
+    if (pageType === 'tyPage') {
+      $(quizCont).load('../partials/partial.html #tyPage')
+    } else if (pageType === 'endPage') {
+      $(quizCont).load('../partials/partial.html #endPage')
+    } else {
+      $(quizCont).load('../partials/partial.html #offerPage')
+    }
+  }
+
+  // it might be said§
+  function under(arr, age) {
+    return arr.filter(e => {
+      return e.age < age
+    }).length
+  }
+
+  function noLicense(arr) {
+    return arr.filter(e => {
+      return e.driving === 'driving_yes'
+    }).length
+  }
+
+  function betweenFirst(arr) {
+    arr
+      .filter(e => {
+        return arr.age >= 18 && arr.age <= 25
+      })
+      .filter(e => {
+        return a.first === 'first_yes'
+      }).length
   }
 
   return {
     save: save,
     validateNum: validateNum,
     validateAge: validateAge,
-    validateLicense: validateLicense,
+    validateDriving: validateDriving,
     validateFirst: validateFirst,
-    validate: validate,
-    loadPage: loadPage
+    loadPage: loadPage,
+    under: under,
+    noLicense: noLicense,
+    betweenFirst: betweenFirst
   }
 })()
 
 // it might be said
 $(function() {
-  $(quizCont).slick({
-    nextArrow:
-      '<button type="button" class="slick-next btn btn-primary">Next</button>',
-    prevArrow:
-      '<button type="button" class="slick-prev btn btn-primary">Previous</button>'
-  })
+  var localData = JSON.parse(localStorage.getItem('cargiant'))
+  var under18s = quiz.under(localData, 40)
+  var licenseNo = quiz.noLicense(localData)
+  var betweenAndFirst = quiz.betweenFirst(localData)
+  console.log(under18s, licenseNo, betweenAndFirst)
 
-  $(quizCont).on('click', '.slick-next', quiz.validateAge)
+  // $(quizCont).slick({
+  //   nextArrow:
+  //     '<button type="button" class="slick-next btn btn-primary">Next</button>',
+  //   prevArrow:
+  //     '<button type="button" class="slick-prev btn btn-primary">Previous</button>'
+  // })
+  //
+  // $(quizCont).on('click', '.slick-next', quiz.validateAge)
 })
 
 // Frontend interface

@@ -26,40 +26,17 @@
             <p>It might be said:</p>
             <form action="" id="quizForm" novalidate>
               <div id="quiz">
-              <div class="form-group question_age">
-                <label for="age">Age</label>
-                <input type="text" id="age" required>
-                <div class="invalid-feedback">Enter a number</div>
-              </div>
-              <!-- It might be said: -->
-                <div class="form-group question_gender">
-                  <label for="gender">Gender</label>
-                  <select class="" name="" id="gender" required>
-                    <option value="male"></option>
-                    <option value="female"></option>
-                    <option value="other"></option>
-                  </select>
+                <div class="form-group q_age" data-db="Age" id="tester">
+                  <label for="age">Test</label>
+                  <input type="text" id="age" data-db="age" required>
+                  <div class="invalid-feedback">Enter a number</div>
                 </div>
-                <div class="form-group question_driving">
-                  <label for="driving">Do you have a driving license</label>
-                  <select name="" id="" id="driving" required>
-                    <option value="driving_yes"></option>
-                    <option value="driving_no"></option>
-                  </select>
-                </div>
-              <!-- It might be said: -->
-                  <div class="form-group question_car">
-                    <label for="first">Is this your first car?</label>
-                    <select name="" id="" id="first" required>
-                      <option value="first_yes"></option>
-                      <option value="first_no"></option>
-                    </select>
-                  </div>
-                </div><!-- End #quiz -->
+              </div><!-- End #quiz -->
 
-              <!--   <button class="btn btn-primary" id="next">Next</button>
-              <button class="btn btn-primary" id="submit">Submit</button> -->
+               <button class="btn btn-primary" id="next">Next</button>
+              <button class="btn btn-primary" id="submit">Submit</button>
             </form>
+            <div id="results"></div>
           </div>
         </div>
       </div>
