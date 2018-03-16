@@ -19,8 +19,6 @@ let quiz = (function() {
   $age.on('focusout', validateNum)
   $age.on('focusout', save)
 
-  // it might be said:
-
   $('#quiz').on('change', '#mf', save)
   $('#quiz').on('change', '#mf', validateMf)
 
@@ -39,14 +37,13 @@ let quiz = (function() {
     console.log(userObj)
     return userObj
   }
-  // it might be said:
+
   function saveToLocalStorage(obj) {
     let oldLocalstorage = JSON.parse(localStorage.getItem('cargiant')) || []
     oldLocalstorage.push(obj)
     localStorage.setItem('cargiant', JSON.stringify(oldLocalstorage))
   }
 
-  // it might be said:
   function validateNum() {
     var num = $age.val()
     if (!/^[0-9]+$/.test(num)) {
@@ -57,7 +54,6 @@ let quiz = (function() {
     $(quizForm).addClass('was-validated')
   }
 
-  // it might be said:
   function validateAge(age) {
     var $age = $('#age').val()
 
@@ -92,7 +88,6 @@ let quiz = (function() {
     }
   }
 
-  //it might be said:
   function loadPage(pageType) {
     if (pageType === 'tyPage') {
       $(quizCont).load('../partials/partial.html #tyPage')
@@ -103,7 +98,6 @@ let quiz = (function() {
     }
   }
 
-  // it might be said§
   function under(arr, age) {
     return arr.filter(e => {
       return e.age < age
@@ -139,7 +133,6 @@ let quiz = (function() {
   }
 })()
 
-// it might be said
 $(function() {
   var localData = JSON.parse(localStorage.getItem('cargiant'))
   var under18s = quiz.under(localData, 40)
