@@ -153,7 +153,7 @@ $(function() {
   var under18s = quiz.under(localData, 40)
   var licenseNo = quiz.noLicense(localData)
   var betweenAndFirst = quiz.betweenFirst(localData)
-  // console.log(under18s, licenseNo, betweenAndFirst)
+  console.log('under 18s: ' + under18s + ' // license: ' + licenseNo)
 })
 
 // Frontend interface
