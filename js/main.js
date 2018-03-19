@@ -10,6 +10,7 @@ let quiz = (function() {
   const $driving = $('#driving')
   const $first = $('#q_car')
   const $results = $('#results')
+  const $page = $('#page')
 
   let userObj = {}
 
@@ -17,6 +18,13 @@ let quiz = (function() {
 
   $age.on('focusout', validateAge)
   $age.on('focusout', validateNum)
+  $age.on('focusout', function() {
+    if (quizForm.checkValidity() === false) {
+      event.preventDefault()
+      event.stopPropagation()
+    }
+    quizForm.classList.add('was-validated')
+  })
   $age.on('focusout', save)
 
   $('#quiz').on('change', '#mf', save)
@@ -51,20 +59,21 @@ let quiz = (function() {
     } else {
       return true
     }
-    $(quizForm).addClass('was-validated')
+    //  $(quizForm).addClass('was-validated')
   }
 
   function validateAge(age) {
     var $age = $('#age').val()
-
+    // it might be said:
     if (validateNum()) {
       $(quizCont).load('../partials/partial.html #q_gender')
     } else if (!validateNum()) {
-      $('.q_age').addClass('has-danger')
+      $('.q_age').addClass('is-invalid')
     }
 
     if ($age < 18 || $age > 80) {
-      $(quizCont).load('../partials/partial.html #endPage')
+      saveToLocalStorage(userObj)
+      $page.load('../partials/partial.html #endPage')
     }
   }
 
@@ -74,7 +83,8 @@ let quiz = (function() {
 
   function validateDriving() {
     if ($(this).val() === 'driving_no') {
-      $(quizCont).load('../partials/partial.html #tyPage')
+      saveToLocalStorage(userObj)
+      $page.load('../partials/partial.html #tyPage')
     } else {
       $(quizCont).load('../partials/partial.html #q_car')
     }
@@ -82,9 +92,10 @@ let quiz = (function() {
 
   function validateFirst() {
     if ($(this).val() === 'first_yes') {
-      $(quizCont).load('../partials/partial.html #tyPage')
+      saveToLocalStorage(userObj)
+      $page.load('../partials/partial.html #tyPage')
     } else {
-      $(quizCont).load('../partials/partial.html #offerPage')
+      $page.load('../partials/partial.html #offerPage')
     }
   }
 
@@ -99,6 +110,9 @@ let quiz = (function() {
   }
 
   function under(arr, age) {
+    if (arr.length === 0) {
+      return
+    }
     return arr.filter(e => {
       return e.age < age
     }).length
@@ -135,19 +149,11 @@ let quiz = (function() {
 
 $(function() {
   var localData = JSON.parse(localStorage.getItem('cargiant'))
+  //console.log(localData, userObj)
   var under18s = quiz.under(localData, 40)
   var licenseNo = quiz.noLicense(localData)
   var betweenAndFirst = quiz.betweenFirst(localData)
-  console.log(under18s, licenseNo, betweenAndFirst)
-
-  // $(quizCont).slick({
-  //   nextArrow:
-  //     '<button type="button" class="slick-next btn btn-primary">Next</button>',
-  //   prevArrow:
-  //     '<button type="button" class="slick-prev btn btn-primary">Previous</button>'
-  // })
-  //
-  // $(quizCont).on('click', '.slick-next', quiz.validateAge)
+  // console.log(under18s, licenseNo, betweenAndFirst)
 })
 
 // Frontend interface
